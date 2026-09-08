@@ -104,7 +104,7 @@
     if (/[?&]sent=1\b/.test(window.location.search)) {
       showStatus(
         "success",
-        "<strong>Message sent.</strong> Thanks for reaching out — we'll get back to you shortly. If this is your first message to us, please check <strong>info@elkru.com</strong> for a one-time FormSubmit activation email."
+        "<strong>Message sent.</strong> Thanks for reaching out — we'll get back to you shortly."
       );
       history.replaceState(null, "", window.location.pathname);
     }
