@@ -451,7 +451,6 @@ section{ padding:96px 0; }
 }
 .field textarea{ resize:vertical; min-height:130px; }
 .field-hint{ font-size:.78rem; color:var(--slate-500); }
-.honey{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
 
 .form-foot{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:24px; flex-wrap:wrap; }
 @media (max-width:640px){
