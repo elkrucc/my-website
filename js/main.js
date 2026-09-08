@@ -110,13 +110,6 @@
     }
 
     form.addEventListener("submit", function (e) {
-      // Honeypot check
-      var honey = form.querySelector('input[name="_honey"]');
-      if (honey && honey.value) {
-        e.preventDefault();
-        return;
-      }
-
       e.preventDefault();
       if (submitBtn) {
         submitBtn.disabled = true;
