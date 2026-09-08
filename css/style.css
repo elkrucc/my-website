@@ -439,10 +439,17 @@ section{ padding:96px 0; }
 
 .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:26px; }
 @media (max-width:560px){ .form-grid{ grid-template-columns:1fr; } }
-.field{ display:flex; flex-direction:column; gap:8px; }
+.field{ display:flex; flex-direction:column; gap:8px; min-width:0; }
 .field.full{ grid-column:1/-1; }
 .field label{ font-size:.86rem; font-weight:700; color:var(--slate-700); }
 .field input, .field select, .field textarea{
+  /* width:100% + min-width:0 are load-bearing, not decorative: a <select>
+     with a long option (e.g. "Remote Work & Application Management") has
+     an intrinsic content width, and grid/flex items default to
+     min-width:auto — which uses that intrinsic width as a floor even
+     with width:100% set, letting the select blow out its column and
+     force the whole page wider than the screen on mobile. */
+  width:100%; min-width:0; box-sizing:border-box;
   font:inherit; padding:13px 15px; border-radius:11px; border:1px solid var(--line); background:var(--bg-soft);
   color:var(--ink); transition:border-color .2s var(--ease), background-color .2s var(--ease), box-shadow .2s var(--ease);
 }
