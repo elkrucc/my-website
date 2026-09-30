@@ -81,8 +81,8 @@
     el.textContent = new Date().getFullYear();
   });
 
-  /* Contact form (FormSubmit) — progressive enhancement:
-     if JS fails, the form still posts normally to FormSubmit's action URL. */
+  /* Contact form (Web3Forms) — progressive enhancement:
+     if JS fails, the form still posts normally to Web3Forms' action URL. */
   var form = document.querySelector("#contact-form");
   if (form) {
     var statusBox = form.querySelector(".form-status");
@@ -100,7 +100,7 @@
       statusBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
-    // No-JS fallback: FormSubmit redirected back here with ?sent=1
+    // No-JS fallback: Web3Forms redirected back here with ?sent=1
     if (/[?&]sent=1\b/.test(window.location.search)) {
       showStatus(
         "success",
@@ -109,43 +109,22 @@
       history.replaceState(null, "", window.location.pathname);
     }
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
+    // Deliberately NOT intercepted with fetch()/preventDefault(). Verified
+    // directly against the live API: api.web3forms.com/submit returns no
+    // Access-Control-Allow-Origin header at all, on either a JSON body or
+    // a CORS-simple urlencoded one. That means fetch() can never read the
+    // response in any real browser — not a testing artifact, an actual
+    // gap in their current API config. A real <form> submission isn't
+    // subject to CORS at all (that restriction only applies to JS-
+    // initiated fetch/XHR), so letting the browser submit natively is the
+    // reliable path: it POSTs, Web3Forms processes it and redirects back
+    // to contact.html's `redirect` hidden field value (?sent=1), which
+    // the block above already detects on page load to show success.
+    form.addEventListener("submit", function () {
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.dataset.originalText = submitBtn.dataset.originalText || submitBtn.textContent;
         submitBtn.textContent = "Sending…";
       }
-
-      var data = new FormData(form);
-      fetch(form.action, {
-        method: "POST",
-        body: data,
-        headers: { Accept: "application/json" },
-      })
-        .then(function (res) {
-          if (res.ok) {
-            form.reset();
-            showStatus(
-              "success",
-              "<strong>Message sent.</strong> Thanks for reaching out — we'll get back to you shortly."
-            );
-          } else {
-            throw new Error("Request failed");
-          }
-        })
-        .catch(function () {
-          showStatus(
-            "error",
-            "<strong>Something went wrong.</strong> Please try again, or reach us directly at <a href=\"mailto:info@elkru.com\">info@elkru.com</a> / <a href=\"tel:+27118920286\">+27 11 892 0286</a>."
-          );
-        })
-        .finally(function () {
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = submitBtn.dataset.originalText;
-          }
-        });
     });
   }
 })();
